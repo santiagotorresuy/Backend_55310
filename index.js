@@ -1,17 +1,17 @@
 class ProductManager {
     #id = 0;
-    #products = [];
-
+    
     constructor(products){
-       this.#products = products;
+        products = [];
+        this.products = products;
     }
 
     getProducts() {
-        return this.#products;
+        return this.products;
     }
 
     addProduct(title, description, price, thumbnail, code, stock){
-        const productByCode = this.#products.find(prod => prod.code === code)
+        const productByCode = this.products.find(prod => prod.code === code)
         
         if(productByCode){
             console.log("El producto ya existe");
@@ -26,16 +26,16 @@ class ProductManager {
                 code,
                 stock 
             }
-            this.#products.push(newProduct);
+            this.products.push(newProduct);
         }
 
     }
 
     getProductById(idProduct){
-        const productById = this.#products.find(prod => prod.id === idProduct)
+        const productById = this.products.find(prod => prod.id === idProduct)
 
         if(productById){
-            console.log(this.#products[productById])
+            console.log(this.products[productById])
         }else{
             console.log("Not found")
         }
@@ -44,7 +44,7 @@ class ProductManager {
 
 const productManager = new ProductManager();
 
-console.log(productManager.getProducts());
-//productManager.addProduct("producto prueba", "este es un producto prueba", 200, "sin imagen", "abc123", 25);
-//console.log(productManager.getProducts())
+
+productManager.addProduct("producto prueba", "este es un producto prueba", 200, "sin imagen", "abc123", 25);
+productManager.getProductById(1)
 
