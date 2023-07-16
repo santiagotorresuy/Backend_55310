@@ -7,7 +7,7 @@ class ProductManager {
     }
 
     getProducts() {
-        return this.products;
+        return console.log(this.products);
     }
 
     addProduct(title, description, price, thumbnail, code, stock){
@@ -33,9 +33,10 @@ class ProductManager {
 
     getProductById(idProduct){
         const productById = this.products.find(prod => prod.id === idProduct)
+        console.log(productById)
 
         if(productById){
-            console.log(this.products[productById])
+            console.log(productById)
         }else{
             console.log("Not found")
         }
@@ -46,5 +47,5 @@ const productManager = new ProductManager();
 
 
 productManager.addProduct("producto prueba", "este es un producto prueba", 200, "sin imagen", "abc123", 25);
+//productManager.getProducts()
 productManager.getProductById(1)
-
