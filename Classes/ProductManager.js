@@ -15,6 +15,16 @@ class ProductManager {
         return console.log(this.products);
     }
 
+    getProductById(idProduct){
+        const productById = this.products.findIndex(prod => prod.id === idProduct);
+
+        if(productById !== -1){
+            console.log(this.products[productById])
+        }else{
+            console.log("Not found")
+        }
+    }
+
     async addProduct(product){
         const {title, description, price, thumbnail, code, stock} = product
         const productByCode = this.products.find(prod => prod.code === code)
@@ -35,7 +45,8 @@ class ProductManager {
                 } 
     
                 this.products.push(newProduct);
-                await fs.promises.writeFile(this.path, JSON.stringify(this.products));
+                const productsJSON = JSON.stringify(this.products) 
+                await fs.promises.writeFile(this.path, productsJSON);
     
                 return newProduct;
             }
@@ -44,13 +55,16 @@ class ProductManager {
         }
     }
 
-    getProductById(idProduct){
-        const productById = this.products.findIndex(prod => prod.id === idProduct);
+    async deleteProduct(id){
+        try{
+            const newArrayProducts = this.products.filter(product => product.id !== id)
+            this.products = newArrayProducts
 
-        if(productById !== -1){
-            console.log(this.products[productById])
-        }else{
-            console.log("Not found")
+            fs.promises.writeFile(this.path, JSON.stringify(this.products))
+
+            console.log(this.products)
+        }catch(error){
+            console.log(error)
         }
     }
 
@@ -60,18 +74,17 @@ class ProductManager {
         try{
             if(product){
                 product[property]= newValue;
-                console.log(this.products)
+                await fs.promises.writeFile(this.path, JSON.stringify(this.products))
             }else{
                 console.log("Not found")
             }
         }catch(error){
             console.log(error)
         }
-
     }
-
 }
 
+//CODIGO
 const productManager = new ProductManager();
 
 let testProduct = {
@@ -83,6 +96,35 @@ let testProduct = {
     stock: 25
 }
 
+let testProduct1 = {
+    title: "producto prueba 1", 
+    description: "este es un producto prueba", 
+    price: 200, 
+    thumbnail: "sin imagen", 
+    code: "abc124", 
+    stock: 25
+}
+
+let testProduct2 = {
+    title: "producto prueba 2", 
+    description: "este es un producto prueba", 
+    price: 200, 
+    thumbnail: "sin imagen", 
+    code: "abc125", 
+    stock: 25
+}
+
+
+//PRIMERA PRE-ENTREGA
+
 productManager.addProduct(testProduct);
-//productManager.getProductById(1)
-productManager.updateProduct(1, "title", "nuevo nombre")
+productManager.addProduct(testProduct1);
+productManager.addProduct(testProduct2);
+
+    //productManager.getProductById(3)
+    //productManager.getProducts()
+
+//SEGUNDA PRE-ENTREGA
+
+    //productManager.updateProduct(1, "title", "nuevo nombre")
+    //productManager.deleteProduct(3)
