@@ -1,7 +1,4 @@
 const fs = require("fs");
-const moment = require("moment");
-const crypto = require("crypto");
-
 
 class ProductManager {
     
@@ -46,7 +43,7 @@ class ProductManager {
     async addProduct(product){
         const {title, description, price, thumbnail, code, stock} = product
         const productByCode = this.products.find(prod => prod.code === code)
-        
+            
         try{
             if(productByCode){
                 console.log("El producto ya existe");
@@ -74,8 +71,6 @@ class ProductManager {
             console.log(error);
         }
     }
-
-    
 
     async deleteProduct(id){
         try{
@@ -108,48 +103,64 @@ class ProductManager {
 }
 
 //CODIGO
-const productManager = new ProductManager([], "../Files/products.json");
+const productManager = new ProductManager([], "./Files/products.json");
 
-let testProduct = {
-    title: "producto prueba", 
+let testProduct1 = {
+    title: "producto prueba 1", 
     description: "este es un producto prueba", 
-    price: 200, 
+    price: 100, 
     thumbnail: "sin imagen", 
     code: "abc123", 
     stock: 25
 }
-
-let testProduct1 = {
-    title: "producto prueba 1", 
+let testProduct2 = {
+    title: "producto prueba 2", 
     description: "este es un producto prueba", 
     price: 200, 
     thumbnail: "sin imagen", 
     code: "abc124", 
     stock: 25
 }
-
-let testProduct2 = {
-    title: "producto prueba 2", 
+let testProduct3 = {
+    title: "producto prueba 3", 
     description: "este es un producto prueba", 
-    price: 200, 
+    price: 300, 
     thumbnail: "sin imagen", 
     code: "abc125", 
     stock: 25
 }
-
+let testProduct4 = {
+    title: "producto prueba 4", 
+    description: "este es un producto prueba", 
+    price: 400, 
+    thumbnail: "sin imagen", 
+    code: "abc126", 
+    stock: 25
+}
+let testProduct5 = {
+    title: "producto prueba 5", 
+    description: "este es un producto prueba", 
+    price: 500, 
+    thumbnail: "sin imagen", 
+    code: "abc127", 
+    stock: 25
+}
 
 //PRIMERA PRE-ENTREGA
 
-
-productManager.addProduct(testProduct);
 productManager.addProduct(testProduct1);
 productManager.addProduct(testProduct2);
+productManager.addProduct(testProduct3);
+productManager.addProduct(testProduct4);
+productManager.addProduct(testProduct5);
 
-
-//productManager.getProductById(3)
-//productManager.getProducts()
+    //productManager.getProductById(3)
+    //productManager.getProducts()
 
 //SEGUNDA PRE-ENTREGA
 
-//productManager.updateProduct(1, "title", "nuevo nombre")
-// productManager.deleteProduct(2)
+    //productManager.updateProduct(1, "title", "nuevo nombre")
+    // productManager.deleteProduct(2)
+
+module.exports = ProductManager
+
