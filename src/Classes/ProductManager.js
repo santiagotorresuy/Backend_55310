@@ -62,7 +62,7 @@ class ProductManager {
                 this.products.push(newProduct);
 
                 await fs.promises.readFile(this.path, "utf-8")
-                const productsJSON = JSON.stringify(this.products, null, 2) 
+                const productsJSON = JSON.stringify(this.products) 
                 await fs.promises.writeFile(this.path, productsJSON);
     
                 return newProduct;
@@ -103,7 +103,7 @@ class ProductManager {
 }
 
 //CODIGO
-const productManager = new ProductManager([], "./Files/products.json");
+const productManager = new ProductManager([], "../Files/products.json");
 
 let testProduct1 = {
     title: "producto prueba 1", 
