@@ -1,17 +1,23 @@
 const fs = require("fs");
+const express = require("express")
 
 class ProductManager {
     
     #id = 0 
 
-    constructor(products, path){
-        //products = [];
-        //path = "../Files/products.json";
+    constructor(products, path, app){
+        products = [];
+        path = process.cwd() + "/Files/products.json";
 
         this.path = path;
         this.products = products;
-        
+
+        //MIDDLEWARE
+        //Como javascript no sabe trabajar con archivos json, necesitamos un middleware para que de cierta manera, todo lo que llegue como request pase por algun proceso a mi eleccion, en este caso transformar todo lo que me llega en un objeto de javascript
+        this.app = app;
     }
+
+    //PRIMERA PRE-ENTREGA
 
     getProducts() {
         return console.log(this.products);
@@ -27,10 +33,12 @@ class ProductManager {
         }
     }
 
+    //SEGUNDA PRE-ENTREGA
+
     async readFile() {
         try {
             if(fs.existsSync(this.path)){
-                const data = await fs.promises.readFile(this.path, 'utf8');
+                const data = await fs.promises.readFile(this.path, 'utf-8');
                 const productsFromJSON = JSON.parse(data);
                 return productsFromJSON
             }
@@ -58,9 +66,8 @@ class ProductManager {
                     code,
                     stock 
                 } 
-
                 this.products.push(newProduct);
-
+                
                 await fs.promises.readFile(this.path, "utf-8")
                 const productsJSON = JSON.stringify(this.products) 
                 await fs.promises.writeFile(this.path, productsJSON);
@@ -100,67 +107,82 @@ class ProductManager {
             console.log(error)
         }
     }
+
+    //TERCERA PRE-ENTREGA
+
+    //Como este bloque de codigo se repite hago una funcion aparte para hacerlo mas prolijo (no funciona)
+
+    // const parseProducts = async () =>{
+    //     const data = await fs.promises.readFile("./Files/products.json", "utf-8");
+    //     return JSON.parse(data)
+    // }
+
+    startServer(port){
+        this.app = express();
+        this.app.use(express.json());
+        this.app.listen(port, () =>{
+            console.log(`Running at port ${port}`)
+        });
+
+        this.getProductsBack()
+    }
+
+    getProductsBack(){
+        this.app.get("/products", async (req, res) =>{
+            const data = await fs.promises.readFile(this.path, "utf-8");
+            const productsJSON = JSON.parse(data)
+            const { limit } = req.query;
+        
+            try {
+                const limitFilter = productsJSON.slice(0, limit || productsJSON.length)
+                limitFilter ? res.json( { message: limitFilter } ) : res.json({ message: productsJSON })
+            } catch (error) {
+                console.log(error);
+            }
+        });
+
+        this.app.get("/products/:id", async (req, res) => {
+            const data = await fs.promises.readFile(this.path, "utf-8");
+            const productsJSON = JSON.parse(data)
+            const { id } = req.params
+        
+            const idFilter = productsJSON.filter(prod => prod.id === Number(id))
+        
+            try {
+                idFilter ? res.json( { message: idFilter } ) : res.json( { massage: productsJSON } )
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    }
+
+    postProduct(){
+        this.app.post("/products", async (req, res) => {
+            const { id, title, description, price, thumbnail, code, stock } = req.body
+    
+            const prodInfo = {
+                id, 
+                title,
+                description,
+                price,
+                thumbnail,
+                code,
+                stock
+            }
+    
+            try{
+                this.products.push(prodInfo)
+                await fs.promises.readFile(this.path, "utf-8");
+                const productsJSON = JSON.stringify(this.products)
+            
+                await fs.promises.writeFile(this.path, productsJSON)
+                res.json({ message: "Producto creado" })
+            }catch(err){
+                console.log(err);
+            }
+        })
+    }
 }
-
-//CODIGO
-const productManager = new ProductManager([], "../Files/products.json");
-
-let testProduct1 = {
-    title: "producto prueba 1", 
-    description: "este es un producto prueba", 
-    price: 100, 
-    thumbnail: "sin imagen", 
-    code: "abc123", 
-    stock: 25
-}
-let testProduct2 = {
-    title: "producto prueba 2", 
-    description: "este es un producto prueba", 
-    price: 200, 
-    thumbnail: "sin imagen", 
-    code: "abc124", 
-    stock: 25
-}
-let testProduct3 = {
-    title: "producto prueba 3", 
-    description: "este es un producto prueba", 
-    price: 300, 
-    thumbnail: "sin imagen", 
-    code: "abc125", 
-    stock: 25
-}
-let testProduct4 = {
-    title: "producto prueba 4", 
-    description: "este es un producto prueba", 
-    price: 400, 
-    thumbnail: "sin imagen", 
-    code: "abc126", 
-    stock: 25
-}
-let testProduct5 = {
-    title: "producto prueba 5", 
-    description: "este es un producto prueba", 
-    price: 500, 
-    thumbnail: "sin imagen", 
-    code: "abc127", 
-    stock: 25
-}
-
-//PRIMERA PRE-ENTREGA
-
-productManager.addProduct(testProduct1);
-productManager.addProduct(testProduct2);
-productManager.addProduct(testProduct3);
-productManager.addProduct(testProduct4);
-productManager.addProduct(testProduct5);
-
-    //productManager.getProductById(3)
-    //productManager.getProducts()
-
-//SEGUNDA PRE-ENTREGA
-
-    //productManager.updateProduct(1, "title", "nuevo nombre")
-    // productManager.deleteProduct(2)
 
 module.exports = ProductManager
 
