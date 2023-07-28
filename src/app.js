@@ -4,7 +4,7 @@ const ProductManager = require("./Classes/ProductManager")
 const productManager = new ProductManager();
 
 let testProduct1 = {
-    title: "producto prueba 1", 
+    title: "productoPrueba1", 
     description: "este es un producto prueba", 
     price: 100, 
     thumbnail: "sin imagen", 
@@ -43,7 +43,30 @@ let testProduct5 = {
     code: "abc127", 
     stock: 25
 }
-
+let testProduct6 = {
+    title: "producto prueba POST", 
+    description: "este es un producto prueba", 
+    price: 600, 
+    thumbnail: "sin imagen", 
+    code: "abc128", 
+    stock: 25
+}
+let testProduct7 = {
+    title: "producto prueba POST", 
+    description: "este es un producto prueba", 
+    price: 700, 
+    thumbnail: "sin imagen", 
+    code: "abc129", 
+    stock: 25
+}
+let testProduct8 = {
+    title: "producto prueba POST", 
+    description: "este es un producto prueba", 
+    price: 800, 
+    thumbnail: "sin imagen", 
+    code: "abc130", 
+    stock: 25
+}
 //PRIMERA PRE-ENTREGA
 
 productManager.addProduct(testProduct1);
@@ -64,7 +87,10 @@ productManager.addProduct(testProduct5);
 
 const port = 8080;
 productManager.startServer(port);
-productManager.postProduct();
+productManager.postProduct(testProduct6);
+//productManager.putProduct();
+productManager.deleteProductBack();
+
 
 
 

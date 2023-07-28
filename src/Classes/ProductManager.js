@@ -11,9 +11,6 @@ class ProductManager {
 
         this.path = path;
         this.products = products;
-
-        //MIDDLEWARE
-        //Como javascript no sabe trabajar con archivos json, necesitamos un middleware para que de cierta manera, todo lo que llegue como request pase por algun proceso a mi eleccion, en este caso transformar todo lo que me llega en un objeto de javascript
         this.app = app;
     }
 
@@ -110,27 +107,24 @@ class ProductManager {
 
     //TERCERA PRE-ENTREGA
 
-    //Como este bloque de codigo se repite hago una funcion aparte para hacerlo mas prolijo (no funciona)
+    //CALLBACKS 
 
-    // const parseProducts = async () =>{
-    //     const data = await fs.promises.readFile("./Files/products.json", "utf-8");
-    //     return JSON.parse(data)
-    // }
-
-    startServer(port){
+    setExpress(port){
         this.app = express();
         this.app.use(express.json());
         this.app.listen(port, () =>{
             console.log(`Running at port ${port}`)
         });
+    }
 
-        this.getProductsBack()
+    parseProducts = async () =>{
+        const data = await fs.promises.readFile(this.path, "utf-8");
+        return JSON.parse(data)
     }
 
     getProductsBack(){
         this.app.get("/products", async (req, res) =>{
-            const data = await fs.promises.readFile(this.path, "utf-8");
-            const productsJSON = JSON.parse(data)
+            const productsJSON = await this.parseProducts();
             const { limit } = req.query;
         
             try {
@@ -142,8 +136,7 @@ class ProductManager {
         });
 
         this.app.get("/products/:id", async (req, res) => {
-            const data = await fs.promises.readFile(this.path, "utf-8");
-            const productsJSON = JSON.parse(data)
+            const productsJSON = await this.parseProducts();
             const { id } = req.params
         
             const idFilter = productsJSON.filter(prod => prod.id === Number(id))
@@ -156,32 +149,87 @@ class ProductManager {
         })
     }
 
-    postProduct(){
-        this.app.post("/products", async (req, res) => {
-            const { id, title, description, price, thumbnail, code, stock } = req.body
+    //METODOS API
+
+    startServer(port){
+        this.setExpress(port)
+        this.getProductsBack()
+    }
+
+    postProduct(productForPost){
+        const { title, description, price, thumbnail, code, stock } = productForPost;
+
+        try {
+            this.app.post("/products", async (req, res) => {
+                productForPost = req.body
+                this.#id++
     
-            const prodInfo = {
-                id, 
-                title,
-                description,
-                price,
-                thumbnail,
-                code,
-                stock
-            }
+                const prodInfo = {
+                    id:this.#id, 
+                    title,
+                    description,
+                    price,
+                    thumbnail,
+                    code,
+                    stock
+                };
+                const productByCode = this.products.find(prod => prod.code === code)
+
+                if(productByCode){
+                    res.json({ message: "El producto ya existe" });
+                }else{
+                    this.products.push(prodInfo);
+                    const productsJSON = JSON.stringify(this.products);
     
-            try{
-                this.products.push(prodInfo)
-                await fs.promises.readFile(this.path, "utf-8");
-                const productsJSON = JSON.stringify(this.products)
-            
-                await fs.promises.writeFile(this.path, productsJSON)
-                res.json({ message: "Producto creado" })
-            }catch(err){
-                console.log(err);
+                    await fs.promises.writeFile(this.path, productsJSON);
+                    res.json({ message: "Producto creado" });
+                }
+            })            
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    putProduct(){
+        this.app.put("/products/:title/:prop", async (req, res) =>{
+            const { title, prop } = req.params;
+            const { value } = req.body;
+
+            console.log("Title:", title);
+            console.log("Prop:", prop);
+            console.log("Value:", value);
+
+            const productsJSON = await this.parseProducts();
+            const filteredProduct = productsJSON.find(p => p.title === title)
+
+            try {
+                if(!filteredProduct){
+                    res.json({ message:"El producto no existe" })
+                }else{
+                    filteredProduct[prop]= value
+                    res.json({ message: filteredProduct })
+                }
+            } catch (error) {
+                console.log(error)
             }
         })
     }
+
+    deleteProductBack(){
+        this.app.delete("/prod/:title", async (req, res) =>{
+            const { title } = req.params
+            const productsJSON = await this.parseProducts();
+            const prodIndex = productsJSON.findIndex(prod => prod.title === title)
+            
+            try {
+                productsJSON.splice(prodIndex, 1)
+                res.json({ message: productsJSON })              
+            } catch (error) {
+                console.log(error)
+            }
+        })
+    }
+    
 }
 
 module.exports = ProductManager
