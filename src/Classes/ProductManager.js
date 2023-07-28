@@ -1,5 +1,6 @@
 const fs = require("fs");
 const express = require("express")
+const router = require("../routes/index")
 
 class ProductManager {
     
@@ -112,123 +113,126 @@ class ProductManager {
     setExpress(port){
         this.app = express();
         this.app.use(express.json());
+        router(this.app)
         this.app.listen(port, () =>{
             console.log(`Running at port ${port}`)
         });
     }
-
-    parseProducts = async () =>{
-        const data = await fs.promises.readFile(this.path, "utf-8");
-        return JSON.parse(data)
+    
+    startServer(port){
+        this.setExpress(port)
+        this.readFile();
+        // this.getProductsBack()
     }
+    
+    // parseProducts = async () =>{
+    //     const data = await fs.promises.readFile(this.path, "utf-8");
+    //     return JSON.parse(data)
+    // }
 
-    getProductsBack(){
-        this.app.get("/products", async (req, res) =>{
-            const productsJSON = await this.parseProducts();
-            const { limit } = req.query;
+    // getProductsBack(){
+    //     this.app.get("/products", async (req, res) =>{
+    //         const productsJSON = await this.parseProducts();
+    //         const { limit } = req.query;
         
-            try {
-                const limitFilter = productsJSON.slice(0, limit || productsJSON.length)
-                limitFilter ? res.json( { message: limitFilter } ) : res.json({ message: productsJSON })
-            } catch (error) {
-                console.log(error);
-            }
-        });
+    //         try {
+    //             const limitFilter = productsJSON.slice(0, limit || productsJSON.length)
+    //             limitFilter ? res.json( { message: limitFilter } ) : res.json({ message: productsJSON })
+    //         } catch (error) {
+    //             console.log(error);
+    //         }
+    //     });
 
-        this.app.get("/products/:id", async (req, res) => {
-            const productsJSON = await this.parseProducts();
-            const { id } = req.params
+    //     this.app.get("/products/:id", async (req, res) => {
+    //         const productsJSON = await this.parseProducts();
+    //         const { id } = req.params
         
-            const idFilter = productsJSON.filter(prod => prod.id === Number(id))
+    //         const idFilter = productsJSON.filter(prod => prod.id === Number(id))
         
-            try {
-                idFilter ? res.json( { message: idFilter } ) : res.json( { massage: productsJSON } )
-            } catch (error) {
-                console.log(error)
-            }
-        })
-    }
+    //         try {
+    //             idFilter ? res.json( { message: idFilter } ) : res.json( { massage: productsJSON } )
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     })
+    // }
 
     //METODOS API
 
-    startServer(port){
-        this.setExpress(port)
-        this.getProductsBack()
-    }
 
-    postProduct(productForPost){
-        const { title, description, price, thumbnail, code, stock } = productForPost;
+    // postProduct(productForPost){
+    //     const { title, description, price, thumbnail, code, stock } = productForPost;
 
-        try {
-            this.app.post("/products", async (req, res) => {
-                productForPost = req.body
-                this.#id++
+    //     try {
+    //         this.app.post("/products", async (req, res) => {
+    //             productForPost = req.body
+    //             this.#id++
     
-                const prodInfo = {
-                    id:this.#id, 
-                    title,
-                    description,
-                    price,
-                    thumbnail,
-                    code,
-                    stock
-                };
-                const productByCode = this.products.find(prod => prod.code === code)
+    //             const prodInfo = {
+    //                 id:this.#id, 
+    //                 title,
+    //                 description,
+    //                 price,
+    //                 thumbnail,
+    //                 code,
+    //                 stock
+    //             };
+    //             const productByCode = this.products.find(prod => prod.code === code)
 
-                if(productByCode){
-                    res.json({ message: "El producto ya existe" });
-                }else{
-                    this.products.push(prodInfo);
-                    const productsJSON = JSON.stringify(this.products);
+    //             if(productByCode){
+    //                 res.json({ message: "El producto ya existe" });
+    //             }else{
+    //                 this.products.push(prodInfo);
+    //                 const productsJSON = JSON.stringify(this.products);
     
-                    await fs.promises.writeFile(this.path, productsJSON);
-                    res.json({ message: "Producto creado" });
-                }
-            })            
-        } catch (error) {
-            console.log(error)
-        }
-    }
+    //                 await fs.promises.writeFile(this.path, productsJSON);
+    //                 res.json({ message: "Producto creado" });
+    //             }
+    //         })            
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
-    putProduct(){
-        this.app.put("/products/:title/:prop", async (req, res) =>{
-            const { title, prop } = req.params;
-            const { value } = req.body;
+    // putProduct(){
+    //     this.app.put("/products/:title/:prop", async (req, res) =>{
+    //         const { title, prop } = req.params;
+    //         const { value } = req.body;
 
-            console.log("Title:", title);
-            console.log("Prop:", prop);
-            console.log("Value:", value);
+    //         console.log("Title:", title);
+    //         console.log("Prop:", prop);
+    //         console.log("Value:", value);
 
-            const productsJSON = await this.parseProducts();
-            const filteredProduct = productsJSON.find(p => p.title === title)
+    //         const productsJSON = await this.parseProducts();
+    //         const filteredProduct = productsJSON.find(p => p.title === title)
 
-            try {
-                if(!filteredProduct){
-                    res.json({ message:"El producto no existe" })
-                }else{
-                    filteredProduct[prop]= value
-                    res.json({ message: filteredProduct })
-                }
-            } catch (error) {
-                console.log(error)
-            }
-        })
-    }
+    //         try {
+    //             if(!filteredProduct){
+    //                 res.json({ message:"El producto no existe" })
+    //             }else{
+    //                 filteredProduct[prop]= value
+    //                 res.json({ message: filteredProduct })
+    //             }
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     })
+    // }
 
-    deleteProductBack(){
-        this.app.delete("/prod/:title", async (req, res) =>{
-            const { title } = req.params
-            const productsJSON = await this.parseProducts();
-            const prodIndex = productsJSON.findIndex(prod => prod.title === title)
+    // deleteProductBack(){
+    //     this.app.delete("/prod/:title", async (req, res) =>{
+    //         const { title } = req.params
+    //         const productsJSON = await this.parseProducts();
+    //         const prodIndex = productsJSON.findIndex(prod => prod.title === title)
             
-            try {
-                productsJSON.splice(prodIndex, 1)
-                res.json({ message: productsJSON })              
-            } catch (error) {
-                console.log(error)
-            }
-        })
-    }
+    //         try {
+    //             productsJSON.splice(prodIndex, 1)
+    //             res.json({ message: productsJSON })              
+    //         } catch (error) {
+    //             console.log(error)
+    //         }
+    //     })
+    // }
     
 }
 

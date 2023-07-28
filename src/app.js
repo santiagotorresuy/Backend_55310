@@ -67,8 +67,8 @@ let testProduct8 = {
     code: "abc130", 
     stock: 25
 }
-//PRIMERA PRE-ENTREGA
 
+//PRIMERA PRE-ENTREGA
 productManager.addProduct(testProduct1);
 productManager.addProduct(testProduct2);
 productManager.addProduct(testProduct3);
@@ -79,17 +79,13 @@ productManager.addProduct(testProduct5);
 //productManager.getProducts()
 
 //SEGUNDA PRE-ENTREGA
-
 //productManager.updateProduct(1, "title", "nuevo nombre")
 //productManager.deleteProduct(2)
 
 //TERCERA PRE-ENTREGA
-
 const port = 8080;
 productManager.startServer(port);
-productManager.postProduct(testProduct6);
-//productManager.putProduct();
-productManager.deleteProductBack();
+
 
 
 
