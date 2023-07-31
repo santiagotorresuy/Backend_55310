@@ -2,9 +2,12 @@ const { Router } = require("express")
 const fs = require("fs")
 
 const router = Router()
+
+//VARIABLES PARA NO HARDCODEAR DATOS
+
 const productsFilePath = process.cwd() + "/Files/products.json";
 
-const parseProducts = async () => {
+const parseProducts = async () => { //fs para obtener los productos product.json
     try {
         const data = await fs.promises.readFile(productsFilePath, "utf-8");  
         const productList = JSON.parse(data);
@@ -15,7 +18,7 @@ const parseProducts = async () => {
     }
 };
 
-const updateProductsFile = async (arr) =>{
+const updateProductsFile = async (arr) =>{ //fs para actualizar archivo products.json
     try{
         await fs.promises.readFile(productsFilePath, "utf-8")
         await fs.promises.writeFile(productsFilePath, JSON.stringify(arr))
@@ -24,8 +27,7 @@ const updateProductsFile = async (arr) =>{
     }
 }
 
-// parseProducts() //AQUI MUESTRA QUE LOS PRODUCTOS LLEGAN DEL JSON PERO NO FUNCIONA EN POSTMAN
-
+//ROUTER
 router.get("/", async (req, res) =>{
     const productsJSON = await parseProducts();
     const { limit } = req.query;

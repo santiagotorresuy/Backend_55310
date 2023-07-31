@@ -2,9 +2,12 @@ const { Router } = require("express")
 const fs = require("fs")
 
 const router = Router()
-const cartFilePath = process.cwd() + "/Files/cart.json";
 
-const parseCart = async () => {
+//VARIABLES PARA NO HARDCODEAR DATOS
+
+const cartFilePath = process.cwd() + "/Files/carts.json";
+
+const parseCart = async () => { //fs para obtener los carritos de carts.json
     try {
         const data = await fs.promises.readFile(cartFilePath, "utf-8");  
         const cartList = JSON.parse(data);
@@ -15,7 +18,7 @@ const parseCart = async () => {
     }
 };
 
-const updateCartFile = async (arr) =>{
+const updateCartFile = async (arr) =>{ //fs para actualizar archivo carts.json
     try{
         await fs.promises.readFile(cartFilePath, "utf-8")
         await fs.promises.writeFile(cartFilePath, JSON.stringify(arr))
