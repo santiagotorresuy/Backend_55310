@@ -112,13 +112,14 @@ router.put("/:pid", async (req, res) =>{
 })
 
 router.delete("/:pid", async (req, res) =>{
-    const { pid } = req.params
     const productsJSON = await parseProducts();
+    const { pid } = req.params
     const prodIndex = productsJSON.findIndex(prod => prod.id === Number(pid))
 
     try {
         if(prodIndex){
             productsJSON.splice(prodIndex, 1);
+            updateProductsFile(productsJSON)
             res.json({ message: productsJSON });
         }else{
             res.json({ message: "product not found"}) 
