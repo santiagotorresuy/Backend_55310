@@ -1,4 +1,6 @@
 const ProductManager = require("./Classes/ProductManager")
+const express = require("express")
+const router = require("./routes/index")
 
 //CODIGO
 const productManager = new ProductManager();
@@ -9,6 +11,7 @@ let testProduct1 = {
     price: 100, 
     thumbnail: "sin imagen", 
     code: "abc123", 
+    category: "test product",
     stock: 25
 }
 let testProduct2 = {
@@ -17,6 +20,7 @@ let testProduct2 = {
     price: 200, 
     thumbnail: "sin imagen", 
     code: "abc124", 
+    category: "test product",
     stock: 25
 }
 let testProduct3 = {
@@ -25,6 +29,7 @@ let testProduct3 = {
     price: 300, 
     thumbnail: "sin imagen", 
     code: "abc125", 
+    category: "test product",
     stock: 25
 }
 let testProduct4 = {
@@ -33,6 +38,7 @@ let testProduct4 = {
     price: 400, 
     thumbnail: "sin imagen", 
     code: "abc126", 
+    category: "test product",
     stock: 25
 }
 let testProduct5 = {
@@ -41,6 +47,7 @@ let testProduct5 = {
     price: 500, 
     thumbnail: "sin imagen", 
     code: "abc127", 
+    category: "test product",
     stock: 25
 }
 let testProduct6 = {
@@ -49,6 +56,7 @@ let testProduct6 = {
     price: 600, 
     thumbnail: "sin imagen", 
     code: "abc128", 
+    category: "test product",
     stock: 25
 }
 let testProduct7 = {
@@ -57,6 +65,7 @@ let testProduct7 = {
     price: 700, 
     thumbnail: "sin imagen", 
     code: "abc129", 
+    category: "test product",
     stock: 25
 }
 let testProduct8 = {
@@ -65,6 +74,7 @@ let testProduct8 = {
     price: 800, 
     thumbnail: "sin imagen", 
     code: "abc130", 
+    category: "test product",
     stock: 25
 }
 
@@ -74,17 +84,18 @@ productManager.addProduct(testProduct2);
 productManager.addProduct(testProduct3);
 productManager.addProduct(testProduct4);
 productManager.addProduct(testProduct5);
-
-//productManager.getProductById(3)
-//productManager.getProducts()
-
-//SEGUNDA PRE-ENTREGA
-//productManager.updateProduct(1, "title", "nuevo nombre")
-//productManager.deleteProduct(2)
+productManager.addProduct(testProduct6);
+productManager.addProduct(testProduct7);
+productManager.addProduct(testProduct8);
 
 //TERCERA PRE-ENTREGA
-const port = 8080;
-productManager.startServer(port);
+const app = express()
+app.use(express.json());
+express.urlencoded({extended:true})
+
+router(app)
+
+module.exports = app
 
 
 
