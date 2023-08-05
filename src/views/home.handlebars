@@ -1,0 +1,43 @@
+{{#if status}}
+    <header class="header">
+        <p class="products_title">Lista de productos</p>
+        <nav class="navbar">
+            <form class="form" id="createProduct">
+                <label for="">Titulo</label>
+                <input type="text" name="title">
+
+                <label for="">Categoria</label>
+                <input type="text" name="category">
+
+                <label for="">Codigo</label>
+                <input type="password" name="code">
+
+                <button type="submit">Crear Producto</button>
+            </form>
+        </nav>        
+    </header>
+    <main class="main">
+        <div class="list_container">
+            {{#each product}}
+                <div class="product_container">
+                    <h1>{{this.title}}</h1>
+                    <p>{{this.category}}</p>
+
+
+                    <img class="product_container_img" src="/img/default_img.png" alt="img">
+
+                    <p>{{this.description}}</p>
+                    <p>{{this.price}}</p>
+                </div>
+            {{/each}}    
+        </div>
+    </main>
+{{/if}}
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="/js/realtimeproducts.js"></script>
+
+
+
+
+

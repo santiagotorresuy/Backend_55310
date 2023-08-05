@@ -1,6 +1,8 @@
-const ProductManager = require("./Classes/ProductManager")
-const express = require("express")
-const router = require("./routes/index")
+const express = require("express");
+const handlebars = require("express-handlebars");
+
+const ProductManager = require("./Classes/ProductManager");
+const router = require("./routes/index");
 
 //CODIGO
 const productManager = new ProductManager();
@@ -51,7 +53,7 @@ let testProduct5 = {
     stock: 25
 }
 let testProduct6 = {
-    title: "producto prueba POST", 
+    title: "producto prueba 6", 
     description: "este es un producto prueba", 
     price: 600, 
     thumbnail: "sin imagen", 
@@ -60,7 +62,7 @@ let testProduct6 = {
     stock: 25
 }
 let testProduct7 = {
-    title: "producto prueba POST", 
+    title: "producto prueba 7", 
     description: "este es un producto prueba", 
     price: 700, 
     thumbnail: "sin imagen", 
@@ -69,7 +71,7 @@ let testProduct7 = {
     stock: 25
 }
 let testProduct8 = {
-    title: "producto prueba POST", 
+    title: "producto prueba 8", 
     description: "este es un producto prueba", 
     price: 800, 
     thumbnail: "sin imagen", 
@@ -88,10 +90,16 @@ productManager.addProduct(testProduct6);
 productManager.addProduct(testProduct7);
 productManager.addProduct(testProduct8);
 
-//TERCERA PRE-ENTREGA
+//APP Y MIDDLEWARES
 const app = express()
+
 app.use(express.json());
+app.use(express.static(__dirname + '/public'))
 express.urlencoded({extended:true})
+
+app.engine("handlebars", handlebars.engine())
+app.set("views", __dirname + "/views")
+app.set("view engine", "handlebars")
 
 router(app)
 

@@ -1,7 +1,10 @@
+
 const app = require("./app.js")
 
 const port = 8080;
 
-app.listen(port, () =>{
+const httpServer = app.listen(port, () =>{
     console.log(`Running on port ${port}`)
 })
+
+module.exports = httpServer

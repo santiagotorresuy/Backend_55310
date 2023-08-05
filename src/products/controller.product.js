@@ -33,12 +33,21 @@ router.get("/", async (req, res) =>{
     const { limit } = req.query;
 
     try {
-        const limitFilter = productsJSON.slice(0, limit || 5)
+        const slicedProducts = productsJSON.slice(0, limit || 5)
+        const status = true;
 
         if(!limit){
-            res.json({ message: productsJSON })
+            res.render("home", {
+                style: "products",
+                status,
+                product: productsJSON,
+            })        
         }else{
-            res.json( { message: limitFilter } )
+            res.render("home", {
+                style: "products",
+                status,
+                product: slicedProducts,
+            })  
         }
     } catch (error) {
         console.log(error);
@@ -49,18 +58,27 @@ router.get("/:pid", async (req, res) => {
     const productsJSON = await parseProducts();
     const { pid } = req.params
 
-    const idFilter = productsJSON.filteredProduct(prod => prod.id === Number(pid))
+    const filteredProduct = productsJSON.filter(prod => prod.id === Number(pid))
+    const status = true;
 
     try {
-        if(idFilter){
-            res.json( { message: idFilter } )
+        if(!filteredProduct){
+            res.render("home", {
+                style: "products",
+                status,
+                product: productsJSON,
+            }) 
         }else{
-            res.json( { massage: productsJSON } )
+            res.render("home", {
+                style: "products",
+                status,
+                product: filteredProduct,
+            })  
         }
     } catch (error) {
         console.log(error)
     }
-})
+})    
 
 router.post("/", async (req, res) => {
     const { title, description, price, thumbnail, code, category, stock } = req.body;
@@ -85,10 +103,16 @@ router.post("/", async (req, res) => {
     if(productByCode){
         res.json({ message: "El producto ya existe" });
     }else{
+        const status = true;
+
         productsJSON.push(prodInfo);
         updateProductsFile(productsJSON)
 
-        res.json({ message: "Producto creado" });
+        res.render("home", {
+            style: "products",
+            status,
+            product: productsJSON,
+        }) 
     }
 })
 
@@ -130,6 +154,5 @@ router.delete("/:pid", async (req, res) =>{
         console.log(error)
     }      
 })
-    
 
-module.exports = router
+module.exports = router 
