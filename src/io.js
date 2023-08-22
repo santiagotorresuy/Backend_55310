@@ -1,13 +1,29 @@
 const { Server } = require("socket.io")
 
-const httpServer = require("./server.js")
+const messages = [];
 
-const io = new Server(httpServer)
+const realTimeServer = httpServer => {
+    const io = new Server(httpServer)
+    
+    io.on("connection", socket => {
+        console.log(`Connection established successfully, Id:${socket.id}`)
+    
+        socket.on("messageProd", payload => {
+            console.log(payload, socket.id)
+        })
 
-io.on("connection", socket => {
-    console.log("Connection established successfully")
+        socket.on("message", data => {
+            messages.push(data)
 
-    socket.on("message", payload => {
-        console.log(payload, socket.id)
+            io.emit("messageLogs", messages)
+        })
+
+        socket.on("auth", data => {
+            socket.emit("messageLogs", messages)
+
+            socket.broadcast.emit("newUser", data)
+        })
     })
-})
+}
+ 
+module.exports = realTimeServer

@@ -6,11 +6,13 @@ form.addEventListener('submit', event => {
   event.preventDefault()
 
   const data = new FormData(form)
-
+ 
   const prod = {}
   
   data.forEach((value, key) => (prod[key] = value))
-  socket.emit("message", prod)
+  
+  socket.emit("messageProd", prod)
+
 
   fetch('http://localhost:8080/api/products', {
       headers: {
