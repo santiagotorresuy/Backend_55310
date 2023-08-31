@@ -1,6 +1,4 @@
 const fs = require("fs");
-// const express = require("express")
-// const routes = require("../routes/index")
 
 class ProductManager {
     
@@ -12,7 +10,6 @@ class ProductManager {
 
         this.path = path;
         this.products = products;
-        // this.app = app;
     }
 
     //PRIMERA PRE-ENTREGA
@@ -108,13 +105,6 @@ class ProductManager {
         }
     }
 
-    //TERCERA PRE-ENTREGA
-
-    // setExpress(port){
-    //     this.app = express();
-    //     this.app.use(express.json());
-    //     express.urlencoded({extended:true})
-    //     routes(this.app)
 }
 
 module.exports = ProductManager

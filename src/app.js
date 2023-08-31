@@ -3,6 +3,7 @@ const handlebars = require("express-handlebars");
 
 const ProductManager = require("./Classes/ProductManager");
 const router = require("./routes/index");
+const mongoConnect = require("./db")
 
 //CODIGO
 const productManager = new ProductManager();
@@ -101,7 +102,9 @@ app.engine("handlebars", handlebars.engine())
 app.set("views", __dirname + "/views")
 app.set("view engine", "handlebars")
 
-router(app)
+mongoConnect()
+
+router(app) 
 
 module.exports = app
 
