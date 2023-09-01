@@ -18,7 +18,7 @@ form.addEventListener('submit', event => {
       headers: {
           'Content-Type': 'application/json',
         },
-        method: 'Post',
+        method: 'POST',
         body: JSON.stringify(prod),
     })
         .then(response => response.json())

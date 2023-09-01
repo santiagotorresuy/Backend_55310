@@ -1,46 +1,29 @@
 const { Router } = require("express")
-const fs = require("fs")
+const router = Router() 
 
-const router = Router()
+const ProductsMongoDao = require("../DAOs/productsMongo.dao")
+const ProductsFsDao = require("../DAOs/productsFs.dao")
 
-//VARIABLES PARA NO HARDCODEAR DATOS
+const ProductsMongo = new ProductsMongoDao
+const ProductsFs = new ProductsFsDao
 
 const productsFilePath = process.cwd() + "/Files/products.json";
 
-const parseProducts = async () => { //fs para obtener los productos product.json
-    try {
-        const data = await fs.promises.readFile(productsFilePath, "utf-8");  
-        const productList = JSON.parse(data);
-
-        return productList
-    } catch (error) {
-        console.log(error);
-    }
-};
-
-const updateProductsFile = async (arr) =>{ //fs para actualizar archivo products.json
-    try{
-        await fs.promises.readFile(productsFilePath, "utf-8")
-        await fs.promises.writeFile(productsFilePath, JSON.stringify(arr))
-    }catch(error){
-        console.log(error)
-    }
-}
-
 //ROUTER
 router.get("/", async (req, res) =>{
-    const productsJSON = await parseProducts();
-    const { limit } = req.query;
 
     try {
-        const slicedProducts = productsJSON.slice(0, limit || 5)
         const status = true;
+        const { limit } = req.query;
+
+        const products = await ProductsFs.find(productsFilePath);
+        const slicedProducts = products.slice(0, limit || 5)
 
         if(!limit){
             res.render("home", {
                 style: "products",
                 status,
-                product: productsJSON,
+                product: products,
             })        
         }else{
             res.render("home", {
@@ -55,20 +38,23 @@ router.get("/", async (req, res) =>{
 });
 
 router.get("/:pid", async (req, res) => {
-    const productsJSON = await parseProducts();
-    const { pid } = req.params
-
-    const filteredProduct = productsJSON.filter(prod => prod.id === Number(pid))
-    const status = true;
 
     try {
-        if(!filteredProduct){
+        const { pid } = req.params
+        const status = true;
+        
+        const allProducts = await ProductsFs.find(productsFilePath)    //tengo que hacerlo con fs porque no se puede handlebars/mongo
+        const product = await ProductsMongo.find({_id: pid});          //para confirmar existencia si uso mongo
+
+        if(!product){
             res.render("home", {
                 style: "products",
                 status,
-                product: productsJSON,
+                product: allProducts,
             }) 
         }else{
+            const filteredProduct = allProducts.filter(prod => prod._id === pid)
+
             res.render("home", {
                 style: "products",
                 status,
@@ -80,57 +66,56 @@ router.get("/:pid", async (req, res) => {
     }
 })    
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res) => {  
     const { title, description, price, thumbnail, code, category, stock } = req.body;
-    const productsJSON = await parseProducts();
-    let prodId = productsJSON.length;
-    prodId++
+    const products = await ProductsFs.find(productsFilePath);
 
     const prodInfo = {
-        id: prodId, 
         title,
         description,
         price,
-        thumbnail,
+        // thumbnail: "Sin imagen",
         code,
         category,
         stock,
-        status: true
     };
 
-    const productByCode = productsJSON.find(prod => prod.code === code)
-
+    const productByCode = products.find(prod => prod.code === code)
+    
     if(productByCode){
         res.json({ message: "El producto ya existe" });
     }else{
         const status = true;
 
-        productsJSON.push(prodInfo);
-        updateProductsFile(productsJSON)
-
+        const prod = await ProductsMongo.insertOne(prodInfo)
+        products.push(prod);
+        
+        await ProductsFs.postOne(products, productsFilePath)
+    
         res.render("home", {
             style: "products",
             status,
-            product: productsJSON,
+            product: products,
         }) 
     }
 })
 
 router.put("/:pid", async (req, res) =>{
-    const { pid } = req.params;
-    const { description } = req.body;
-
-    const productsJSON = await parseProducts();
-    const filteredProduct = productsJSON.find(p => p.id === Number(pid))
-
+     
     try {
-        if(!filteredProduct){
+        const { pid } = req.params;
+    
+        const product = await ProductsMongo.find({_id: pid});
+
+        if(!product){
             res.json({ message:"El producto no existe" })
         }else{
-            filteredProduct.description = description 
-            updateProductsFile(productsJSON)
+            await ProductsMongo.updateOne(pid, req.body)
+            const updatedProduct = await ProductsMongo.find({_id: pid})
 
-            res.json({ message: filteredProduct })
+            await ProductsFs.postOne(updatedProduct, productsFilePath)
+
+            res.json({ message: updatedProduct })
         }
     } catch (error) {
         console.log(error)
@@ -138,17 +123,22 @@ router.put("/:pid", async (req, res) =>{
 })
 
 router.delete("/:pid", async (req, res) =>{
-    const productsJSON = await parseProducts();
-    const { pid } = req.params
-    const prodIndex = productsJSON.findIndex(prod => prod.id === Number(pid))
 
     try {
-        if(prodIndex){
-            productsJSON.splice(prodIndex, 1);
-            updateProductsFile(productsJSON)
-            res.json({ message: productsJSON });
+        const { pid } = req.params
+        const prodForDelete = await ProductsMongo.find({_id: pid})
+
+        if(!prodForDelete){
+            res.json({ message: "El producto no existe"}) 
         }else{
-            res.json({ message: "product not found"}) 
+            await ProductsMongo.deleteOne({_id: pid})
+
+            const deletedProduct = await ProductsMongo.find({_id: pid})
+            console.log(deletedProduct)
+
+            await ProductsFs.postOne(deletedProduct, productsFilePath)
+
+            res.json({ message: deletedProduct });
         }              
     } catch (error) {
         console.log(error)

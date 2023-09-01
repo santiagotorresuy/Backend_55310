@@ -10,7 +10,7 @@ class ProductManager {
 
         this.path = path;
         this.products = products;
-    }
+    } 
 
     //PRIMERA PRE-ENTREGA
 

@@ -1,12 +1,13 @@
 const { Router } = require("express")
-const Users = require("../models/users")
+const UsersMongoDao = require("../DAOs/userMongo.dao")
+
+const Users = new UsersMongoDao
 
 const router = Router()
 
 router.get("/", async (req, res) =>{
-
-    try {
-        const users = await Users.find({status: true}, {status: 0, __v: 0})
+    try {  
+        const users = await Users.findAll()
         res.json({ message: users })
     } catch (error) {
         res.json({ error })
@@ -23,7 +24,7 @@ router.post("/", async (req, res) =>{
         age,
     }
 
-    const newUser = await Users.create(userInfo)
+    const newUser = await Users.insertOne(userInfo)
 
     res.json({ message: newUser })
 })

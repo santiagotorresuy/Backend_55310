@@ -6,7 +6,7 @@ const chat = async () => {
     const swal = await Swal.fire({
         title: "Identifícate",
         input: "text",
-        text: "Ingresa el usuario para identificarte    ",
+        text: "Ingresa el usuario para identificarte",
         inputValidator: value => {
             return !value && "Necesitas ingrasar tu nickname"
         },
