@@ -39,16 +39,16 @@ router.get("/:cid", async (req, res) => {
 router.post("/", async (req, res) => {
 
     try {
-        const { subTotal } = req.params
+        const { product, subTotal } = req.body
 
         const newCart = {
             subTotal,
         }
 
-        const postCart = await CartsMongo.findOne(newCart)
+        const postedProduct = await CartsMongo.insertOne(newCart)
 
-        await CartsFs.postOne(postCart, cartFilePath)
-
+        await CartsFs.postOne(postedProduct, cartFilePath)
+        
         res.json({ message: "Cart created successfully" })
     } catch (error) {
         console.log(error)
@@ -58,13 +58,17 @@ router.post("/", async (req, res) => {
 router.patch("/:cid", async (req, res) => {
     try {
         const { cid } = req.params
+        const { product } = req.body
 
         const cart = await CartsMongo.findOne(cid)
 
         if(!cart){
             res.json({ message: "Cart does not exist"})
         }
-        await CartsMongo.updateOne(cid, req.body)
+
+        cart.products.push({ product })
+
+        await CartsMongo.updateOne(cid, cart)
 
         const updatedCart = await CartsMongo.findOne(cid)
 

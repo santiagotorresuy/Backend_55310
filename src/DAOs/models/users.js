@@ -14,7 +14,7 @@ const usersSchema = new mongoose.Schema({
         type: Boolean,
         default: true
     },
-    carts: {
+    cart: {
         type: [
             {
                 cart:{

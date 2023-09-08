@@ -1,1 +1,1 @@
-[{"_id":"64f269b75376013bf4a8ed2d","status":false}] 
+[{"title":"POST test product","description":"este es un producto prueba","price":111,"thumbnail":"Sin imagen","code":"abc261","category":"test product","stock":25,"status":true,"_id":"64fa87c0175abca6cbb3b197","__v":0},{"title":"POST test product","description":"este es un producto prueba","price":111,"thumbnail":"Sin imagen","code":"abc21","category":"test product","stock":25,"status":true,"_id":"64fa8941c078ceb13b13a3d3","__v":0}]
