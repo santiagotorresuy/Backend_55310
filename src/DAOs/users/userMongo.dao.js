@@ -1,4 +1,4 @@
-const Users = require("../DAOs/models/users")
+const Users = require("../models/users")
 
 class UsersMongoDao {
     async findAll() {

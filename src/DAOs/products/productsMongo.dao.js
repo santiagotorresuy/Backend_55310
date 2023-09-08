@@ -1,5 +1,5 @@
-const Products = require("../DAOs/models/products.js")
-
+const Products = require("../models/products.js")
+ 
 class ProductsMongoDao {
     async find() {
         return await Products.find({}, {status: true})

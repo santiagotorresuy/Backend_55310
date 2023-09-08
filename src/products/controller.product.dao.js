@@ -1,15 +1,14 @@
 const { Router } = require("express")
 const router = Router() 
 
-const ProductsMongoDao = require("../DAOs/productsMongo.dao")
-const ProductsFsDao = require("../DAOs/productsFs.dao")
+const ProductsMongoDao = require("../DAOs/products/productsMongo.dao")
+const ProductsFsDao = require("../DAOs/products/productsFs.dao")
 
-const ProductsMongo = new ProductsMongoDao
+const ProductsMongo = new ProductsMongoDao 
 const ProductsFs = new ProductsFsDao
 
 const productsFilePath = process.cwd() + "/Files/products.json";
-
-//ROUTER
+ 
 router.get("/", async (req, res) =>{
 
     try {
@@ -108,7 +107,7 @@ router.put("/:pid", async (req, res) =>{
         const product = await ProductsMongo.find({_id: pid});
 
         if(!product){
-            res.json({ message:"El producto no existe" })
+            res.json({ message:"Product does not exist" })
         }else{
             await ProductsMongo.updateOne(pid, req.body)
             const updatedProduct = await ProductsMongo.find({_id: pid})

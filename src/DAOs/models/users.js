@@ -13,6 +13,17 @@ const usersSchema = new mongoose.Schema({
     status: { 
         type: Boolean,
         default: true
+    },
+    carts: {
+        type: [
+            {
+                cart:{
+                    type: mongoose.Schema.Types.ObjectId,
+                    ref: "cart",
+                }
+            }
+        ],
+        default: [],
     }
 })
 

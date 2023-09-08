@@ -1,5 +1,5 @@
 const { Router } = require("express")
-const UsersMongoDao = require("../DAOs/userMongo.dao")
+const UsersMongoDao = require("../DAOs/users/userMongo.dao")
 
 const Users = new UsersMongoDao
 
