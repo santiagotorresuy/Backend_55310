@@ -19,13 +19,13 @@ router.get("/", async (req, res) =>{
         const slicedProducts = products.slice(0, limit || 5)
 
         if(!limit){
-            res.render("home", {
+            res.render("products", {
                 style: "products",
                 status,
                 product: products,
             })        
         }else{
-            res.render("home", {
+            res.render("products", {
                 style: "products",
                 status,
                 product: slicedProducts,
@@ -46,7 +46,7 @@ router.get("/:pid", async (req, res) => {
         const product = await ProductsMongo.find({_id: pid});          //para confirmar existencia si uso mongo
 
         if(!product){
-            res.render("home", {
+            res.render("products", {
                 style: "products",
                 status,
                 product: allProducts,
@@ -54,7 +54,7 @@ router.get("/:pid", async (req, res) => {
         }else{
             const filteredProduct = allProducts.filter(prod => prod._id === pid)
 
-            res.render("home", {
+            res.render("products", {
                 style: "products",
                 status,
                 product: filteredProduct,
@@ -91,7 +91,7 @@ router.post("/", async (req, res) => {
         
         await ProductsFs.postOne(products, productsFilePath)
     
-        res.render("home", {
+        res.render("products", {
             style: "products",
             status,
             product: products,

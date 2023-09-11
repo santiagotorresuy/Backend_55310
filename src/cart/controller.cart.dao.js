@@ -45,6 +45,7 @@ router.post("/", async (req, res) => {
             subTotal,
         }
 
+        console.log(product)
         const postedProduct = await CartsMongo.insertOne(newCart)
 
         await CartsFs.postOne(postedProduct, cartFilePath)

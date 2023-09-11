@@ -1,51 +1,31 @@
-{{#if status}}
+
     <header class="header">
-        <p class="products_title">Lista de productos</p>
-        <nav class="navbar">
-            <form class="form" id="createProduct">
-                <label for="">Titulo</label>
-                <input type="text" name="title">
-
-                <label for="">Categoria</label>
-                <input type="text" name="category">
-
-                <label for="">Descripcion</label>
-                <input type="text" name="description">
-            
-                <label for="">Codigo</label>
-                <input type="password" name="code">
-
-                <label for="">Precio</label>
-                <input type="number" name="price">
-
-                <label for="">Stock</label>
-                <input type="number" name="stock">
-
-                <button type="submit">Crear Producto</button>
-            </form>
-        </nav>        
-    </header>
-    <main class="main">
-        <div class="list_container">
-            {{#each product}}
-                <div class="product_container">
-                    <h1>{{this.title}}</h1>
-                    <p>{{this.category}}</p>
-
-
-                    <img class="product_container_img" src="/img/default_img.png" alt="img">
-
-                    <p>{{this.description}}</p>
-                    <p>{{this.price}}</p>
-                </div>
-            {{/each}}    
+        <div class="header__container">
+            <div class="header__logo">
+                <img class="header__img" src="/img/bonsai-logo.png" alt="logo">
+                <h1 class="header__h1">Bonsai</h1>
+            </div>
+            <nav class="header__nav"> 
+                <span class="header__nav__span">Trees</span>
+                <span class="header__nav__span">About us</span>
+                <span class="header__nav__span">Contact</span>
+            </nav>
+            <div class="header__log">
+                <img width="32" height="32" src="https://img.icons8.com/retro/32/guest-male.png" alt="guest-male"/>
+                <img width="32" height="32" src="https://img.icons8.com/retro/32/shopping-cart-loaded.png" alt="shopping-cart-loaded"/>
+            </div>
+            <article class="header__article">
+                <h2 class="header__article__h2">The best plants under your roof</h2>
+                <a href="http://localhost:8080/api/products" class="header__article__btn" id="explore_more_btn">
+                    <p>Explore more</p> 
+                    <img width="50" height="50" src="https://img.icons8.com/ios/50/FFFFFF/long-arrow-right--v1.png" alt="long-arrow-right--v1"/>
+                </a>
+            </article>
         </div>
-    </main>
-{{/if}}
+    </header>
  
 <script src="/socket.io/socket.io.js"></script>
 <script src="/js/home.js"></script>
-
 
 
 

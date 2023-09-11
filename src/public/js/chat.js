@@ -11,7 +11,7 @@ const chat = async () => {
             return !value && "Necesitas ingrasar tu nickname"
         },
         allowOutsideClick: false,
-    })
+    }) 
 
     const user = swal.value
 

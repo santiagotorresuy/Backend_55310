@@ -1,0 +1,20 @@
+{{#if status}}
+    <main class="main">
+        <div class="list_container">
+            {{#each product}}
+                <div class="product_container">
+                    <h1>{{this.title}}</h1>
+                    <p>{{this.category}}</p>
+
+
+                    <img class="product_container_img" src="/img/default_img.png" alt="img">
+
+                    <p>{{this.description}}</p>
+                    <p>{{this.price}}</p>
+                </div>
+            {{/each}}    
+        </div>
+    </main>
+{{/if}}
+ 
+<script src="/socket.io/socket.io.js"></script>

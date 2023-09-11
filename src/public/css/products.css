@@ -1,22 +1,4 @@
-.header{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding-bottom: 30px;
-}
-
-.form{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.navbar{
-    width: fit-content;
-}
+/* MAIN CONTAINER */
 
 .main{
     display: flex;
@@ -24,13 +6,14 @@
     justify-content: flex-start;
     max-height: 100%;
     max-width: 100%;
+    background-image: url(https://img.freepik.com/free-vector/green-fluid-background-frame-vector_53876-162336.jpg?w=360&t=st=1694222212~exp=1694222812~hmac=cc5661ffab460a9d56d3002fcf28b86d15606e65518d923b204a733fea7e1eb0);
+    background-size: cover;
 }
 
 .list_container{
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    background-color: gray;
 }
 
 .products_title{
