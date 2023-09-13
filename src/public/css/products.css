@@ -3,7 +3,6 @@
 .main{
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
     max-height: 100%;
     max-width: 100%;
     background-size: cover;
@@ -61,4 +60,18 @@
     color: grey;
     font-size: 30px;
     margin-top: 0;
+}
+
+.pagination {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination_handlers {
+    display: flex;
+    justify-content: space-between;
+    align-self: center;
+    width: 850px;
+    margin-block: 20px;
 }

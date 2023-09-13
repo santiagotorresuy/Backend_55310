@@ -12,7 +12,7 @@ const cartFilePath = process.cwd() + "/Files/carts.json";
 router.get("/", async (req, res) =>{
     try {
         const carts = await CartsMongo.find()
-
+ 
         res.json({ message: carts })
     } catch (error) {
         console.log(error)
@@ -39,13 +39,14 @@ router.get("/:cid", async (req, res) => {
 router.post("/", async (req, res) => {
 
     try {
-        const { product, subTotal } = req.body
+        const { products = [] , subTotal } = req.body
 
         const newCart = {
             subTotal,
+            products,
         }
 
-        console.log(product)
+        console.log(products)
         const postedProduct = await CartsMongo.insertOne(newCart)
 
         await CartsFs.postOne(postedProduct, cartFilePath)
@@ -84,7 +85,6 @@ router.patch("/:cid", async (req, res) => {
 router.delete("/:cid", async (req, res) =>{
     try {
         const { cid } = req.params
-
         const cart = await CartsMongo.findOne(cid)
 
         if(!cart){
@@ -98,6 +98,26 @@ router.delete("/:cid", async (req, res) =>{
         console.log(error)
     }
 })
+
+router.delete("/:cid/products/:pid", async (req, res) =>{
+    try {
+        const { cid, pid } = req.params
+        const cart = await CartsMongo.findOne(cid)
+
+        
+        if(!cart){
+            res.json({ message: "Cart not found"})
+        }
+        
+        await CartsMongo.deleteProduct(cid, pid)
+        // await CartsMongo.deleteOne(cid)
+
+        res.json({ message: cart })
+    } catch (error) {
+        console.log(error)
+    }
+})
+
     
 
 module.exports = router

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose")
+const mongoosePaginate = require("mongoose-paginate-v2")
 
 const cartCollection = "cart"
 
@@ -10,8 +11,9 @@ const cartSchema = new mongoose.Schema({
                     type: mongoose.Schema.Types.ObjectId,
                     ref: "products",
                 },
+                quantity: Number
             },
-        ], 
+        ],  
     },
     subTotal:{
         type: Number,
@@ -20,7 +22,8 @@ const cartSchema = new mongoose.Schema({
     status: {
         type: Boolean,
         default: true
-    }
+    },
+    createdAt: Date
 })
 
 cartSchema.pre("find", function() {
@@ -30,6 +33,8 @@ cartSchema.pre("find", function() {
 cartSchema.pre("findOne", function() {
     this.populate("products.product")
 })
+
+cartSchema.plugin(mongoosePaginate)
 
 const Carts = mongoose.model(cartCollection, cartSchema)
 

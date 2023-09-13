@@ -12,40 +12,35 @@ const productsFilePath = process.cwd() + "/Files/products.json";
 router.get("/", async (req, res) =>{
     try {
         const status = true;
-        const { limit } = req.query;
+        const { limit , page , sort, category } = req.query
 
         //TRAIGO DE MONGO, HAGO POST CON FS 
-        const allProducts = await ProductsMongo.find()
-        await ProductsFs.post(allProducts, productsFilePath)
+        const allProducts = await ProductsMongo.find(limit, page, sort)
+        const products = allProducts.filter(prod => prod.category === category)
 
-        //BUSCO CON FS PARA PODER USAR HANDLEBARS
-        const products = await ProductsFs.find(productsFilePath)
-        const slicedProducts = products.slice(0, limit || 10)
+        await ProductsFs.post(category ? products : allProducts, productsFilePath)
+        
+        // BUSCO CON FS PARA PODER USAR HANDLEBARS
+        const prods = await ProductsFs.find(productsFilePath)
 
-        if(!limit){
-            res.render("products", {
-                style: "products",
-                status,
-                product: products,
-            })        
-        }else{
-            res.render("products", {
-                style: "products",
-                status,
-                product: slicedProducts,
-            })  
-        }
+        res.render("products", {
+            style: "products",
+            status,
+            product: prods,
+        })    
+
+        // res.json( { message: allProducts })
     } catch (error) {
-        console.log(error);
+        res.json({ status: error, message: error});
     }
 });
 
 router.get("/:pid", async (req, res) => {
     try {
-        const { pid } = req.params
         const status = true;
-        
-        const product = await ProductsMongo.find({_id: pid});    
+        const { pid } = req.params
+
+        const product = await ProductsMongo.findOne(pid); 
         const allProducts = await ProductsFs.find(productsFilePath)  
 
         if(!product){
@@ -64,7 +59,7 @@ router.get("/:pid", async (req, res) => {
             })  
         }
     } catch (error) {
-        console.log(error)
+        res.json({ status: error, message: error});
     }
 })    
 

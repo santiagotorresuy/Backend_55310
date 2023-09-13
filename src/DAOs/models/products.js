@@ -7,10 +7,7 @@ const productsSchema = new mongoose.Schema({
     title: String,
     description: String,
     price: Number,
-    thumbnail: {
-        type: String, 
-        default: "Sin imagen"   
-    },
+    thumbnail: String,
     code:{
         type: String,
         unique: true
