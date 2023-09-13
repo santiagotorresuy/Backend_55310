@@ -2,7 +2,7 @@ const Products = require("../models/products.js")
  
 class ProductsMongoDao {
     async find() {
-        return await Products.find({}, {status: true})
+        return await Products.find({status: true}, {__v: 0}) 
     }
  
     async insertOne(newProductData) {

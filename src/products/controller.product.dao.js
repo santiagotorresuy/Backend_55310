@@ -5,18 +5,22 @@ const ProductsMongoDao = require("../DAOs/products/productsMongo.dao")
 const ProductsFsDao = require("../DAOs/products/productsFs.dao")
 
 const ProductsMongo = new ProductsMongoDao 
-const ProductsFs = new ProductsFsDao
+const ProductsFs = new ProductsFsDao 
 
 const productsFilePath = process.cwd() + "/Files/products.json";
  
 router.get("/", async (req, res) =>{
-
     try {
         const status = true;
         const { limit } = req.query;
 
-        const products = await ProductsFs.find(productsFilePath);
-        const slicedProducts = products.slice(0, limit || 5)
+        //TRAIGO DE MONGO, HAGO POST CON FS 
+        const allProducts = await ProductsMongo.find()
+        await ProductsFs.post(allProducts, productsFilePath)
+
+        //BUSCO CON FS PARA PODER USAR HANDLEBARS
+        const products = await ProductsFs.find(productsFilePath)
+        const slicedProducts = products.slice(0, limit || 10)
 
         if(!limit){
             res.render("products", {
@@ -37,13 +41,12 @@ router.get("/", async (req, res) =>{
 });
 
 router.get("/:pid", async (req, res) => {
-
     try {
         const { pid } = req.params
         const status = true;
         
-        const allProducts = await ProductsFs.find(productsFilePath)    //tengo que hacerlo con fs porque no se puede handlebars/mongo
-        const product = await ProductsMongo.find({_id: pid});          //para confirmar existencia si uso mongo
+        const product = await ProductsMongo.find({_id: pid});    
+        const allProducts = await ProductsFs.find(productsFilePath)  
 
         if(!product){
             res.render("products", {
@@ -73,7 +76,7 @@ router.post("/", async (req, res) => {
         title,
         description,
         price,
-        // thumbnail: "Sin imagen",
+        thumbnail,
         code,
         category,
         stock,
@@ -89,7 +92,7 @@ router.post("/", async (req, res) => {
         const prod = await ProductsMongo.insertOne(prodInfo)
         products.push(prod);
         
-        await ProductsFs.postOne(products, productsFilePath)
+        await ProductsFs.post(products, productsFilePath)
     
         res.render("products", {
             style: "products",
@@ -112,7 +115,7 @@ router.put("/:pid", async (req, res) =>{
             await ProductsMongo.updateOne(pid, req.body)
             const updatedProduct = await ProductsMongo.find({_id: pid})
 
-            await ProductsFs.postOne(updatedProduct, productsFilePath)
+            await ProductsFs.post(updatedProduct, productsFilePath)
 
             res.json({ message: updatedProduct })
         }
@@ -135,7 +138,7 @@ router.delete("/:pid", async (req, res) =>{
             const deletedProduct = await ProductsMongo.find({_id: pid})
             console.log(deletedProduct)
 
-            await ProductsFs.postOne(deletedProduct, productsFilePath)
+            await ProductsFs.post(deletedProduct, productsFilePath)
 
             res.json({ message: deletedProduct });
         }              

@@ -3,14 +3,12 @@
         <div class="list_container">
             {{#each product}}
                 <div class="product_container">
-                    <h1>{{this.title}}</h1>
-                    <p>{{this.category}}</p>
+                    {{!-- <p>{{this.category}}</p> --}}
 
-
-                    <img class="product_container_img" src="/img/default_img.png" alt="img">
-
-                    <p>{{this.description}}</p>
-                    <p>{{this.price}}</p>
+                    <img class="product_container_img" src="{{this.thumbnail}}" alt="img">
+                    
+                    <h1 class="product_title">{{this.title}}</h1>
+                    <p class="product_price">USD {{this.price}}</p>
                 </div>
             {{/each}}    
         </div>

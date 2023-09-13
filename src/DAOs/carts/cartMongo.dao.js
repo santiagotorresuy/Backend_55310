@@ -3,12 +3,12 @@ const Carts = require("../models/carts.js")
 class CartsMongoDao {
     async find() {
         return await Carts.find({ status: true }, { __v: 0, status: 0})
-    }
+    } 
 
     async findOne(id) {
         return await Carts.findOne({_id: id, status: true }, { __v: 0, status: 0})
     }
- 
+  
     async insertOne(newCart) {
         return await Carts.create(newCart)
     } 
