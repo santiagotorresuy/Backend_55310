@@ -5,24 +5,35 @@ class CartsMongoDao {
         return await Carts.find({ status: true }, { __v: 0, status: 0})
     } 
 
-    async findOne(id) {
-        return await Carts.findOne({_id: id, status: true }, { __v: 0, status: 0})
+    async findOne(cid) {
+        return await Carts.findOne({_id: cid, status: true }, { __v: 0, status: 0})
     }
   
     async insertOne(newCart) {
         return await Carts.create(newCart)
     }  
 
-    async updateOne(id, body) {
-        return await Carts.updateOne({_id: id}, body)
+    async updateOne(cid, body) {
+        return await Carts.updateOne({_id: cid}, body)
     }
 
-    async deleteOne(id) {
-        return await Carts.updateOne({_id: id}, {status: false})
+    async updateQuantity(cid, pid, quantity) {
+        return await Carts.updateOne(
+            { _id: cid, "products.product": pid},
+            { $set: {"products.$.quantity": quantity}}
+        )
     }
 
-    async deleteProduct(id, pid) {
-        return await Carts.updateOne({ _id: id }, { $group: { "products": { "product": !pid } }})
+    async deleteOne(cid) {
+        return await Carts.updateOne({_id: cid}, {status: false})
+    }
+
+    async deleteProduct(cid, pid) {
+        return await Carts.updateOne(
+            { _id: cid }, 
+            { $pull: { products: { _id: pid } }},
+            { safe: true, multi: false }
+        )
     }
 }
 
