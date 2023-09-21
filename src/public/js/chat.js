@@ -14,7 +14,7 @@ const chat = async () => {
     }) 
 
     const user = swal.value
-
+ 
     socket.emit("auth", user)
 
     chatBox.addEventListener("keyup", e => {

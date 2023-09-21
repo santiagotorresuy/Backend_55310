@@ -94,7 +94,7 @@ router.put("/:cid/products/:pid", async (req,res) => {
         await CartsMongo.updateQuantity(cid, pid, quantity)
 
         const updatedCart = await CartsMongo.findOne(cid)
-        console.log(updatedCart)
+        console.log(updatedCart) // NO SE PORQUE PERO NO LO ESTA ACTUALIZANDO POR MAS QUE FUNCIONE 
 
         res.json({ message: updatedCart })
     } catch (error) {

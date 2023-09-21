@@ -1,6 +1,6 @@
 require("dotenv").config()
 
-module.exports={
+module.exports= {
     port: process.env.PORT || 3000,
     db: {
         user: process.env.DB_USER,
@@ -8,4 +8,5 @@ module.exports={
         host: process.env.DB_HOST,
         name: process.env.DB_NAME,
     },
+    secret: process.env.SECRET_SESSION,
 }

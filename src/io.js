@@ -23,6 +23,7 @@ const realTimeServer = httpServer => {
 
             socket.broadcast.emit("newUser", data)
         })
+
     })
 }
  

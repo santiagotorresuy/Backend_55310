@@ -4,15 +4,19 @@ const usersCollection = "users"
 
 const usersSchema = new mongoose.Schema({
     name: String,
-    lasname: String,
+    lastName: String,
     email: {
         type: String,
-        unique: true
+        unique: true 
     },
     age: Number,
     status: { 
         type: Boolean,
         default: true
+    },
+    password: {
+        type: String,
+        unique: true
     },
     cart: {
         type: [
