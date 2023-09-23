@@ -8,15 +8,14 @@ const login = async () => {
     
             const data = {}
             const formData = new FormData(loginForm)
-            console.log(data)
     
             formData.forEach((value, key) => (data[key] = value))
 
             const URL = 'http://localhost:8080/api/users/login'
             const headers = {
                 'Content-Type': 'application/json',
-            }
-            const method = "POST"
+            } 
+            const method = "POST" 
             const body = JSON.stringify(data)
     
             const response = await fetch(URL, {
@@ -25,11 +24,11 @@ const login = async () => {
                 body,
             })
             
-            const newSession = await response.json()
-            console.log(newSession.payload)
+            const responseData = await response.json()
+            console.log(responseData) 
 
-            responseRegister.innerHTML = `${newSession.payload}`
-            console.log(newSession)
+            localStorage.setItem("authToken", responseData.token)
+            responseRegister.innerHTML = `${responseData.payload}`
         })
     } catch (error) {
         console.log(error)

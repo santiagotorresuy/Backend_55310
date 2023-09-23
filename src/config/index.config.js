@@ -8,5 +8,13 @@ module.exports= {
         host: process.env.DB_HOST,
         name: process.env.DB_NAME,
     },
-    secret: process.env.SECRET_SESSION,
+    secretSession: process.env.SECRET_SESSION,
+    github_passport: {
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: process.env.GITHUB_CALLBACK_URL
+    },
+    jwtConfig:{
+        secret: process.env.SECRET_JWT
+    }
 }

@@ -5,8 +5,10 @@ class UsersMongoDao {
         return await Users.find({status: true}, {status: 0, __v: 0})
     }
 
-    async findOne(email) {
-        return await Users.findOne({email: email}, {status: 0, __v:0}, {status:true})
+    async findOne(key, value) {
+        const query = {}
+        query[key] = value
+        return await Users.findOne(query, {status: 0, __v:0}, {status:true})
     }
  
     async insertOne(newUserData) {

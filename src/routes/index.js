@@ -13,7 +13,7 @@ const router = app => {
     app.use("/api/templates", templateController)
     app.use("/api/products", productController)
     app.use("/api/createProduct", createProductController)
-    app.use("/api/carts", cartController)
+    app.use("/api/carts", cartController) 
     app.use("/api/chat", chatController)
     app.use("*", (req, res) => {
         res.render("notFound")
