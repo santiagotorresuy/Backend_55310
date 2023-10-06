@@ -8,4 +8,4 @@ const cookieExtractor = req => {
     return token
 }
 
-module.exports = cookieExtractor
+module.exports = cookieExtractor 

@@ -25,8 +25,6 @@ const login = async () => {
             })
             
             const responseData = await response.json()
-            console.log(responseData) 
-
             localStorage.setItem("authToken", responseData.token)
             responseRegister.innerHTML = `${responseData.payload}`
         })

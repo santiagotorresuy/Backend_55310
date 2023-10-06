@@ -1,14 +1,14 @@
 const { Router } = require("express")
-const UsersMongoDao = require("../DAOs/users/userMongo.dao")
 const passport = require("passport")
+const UsersMongoDao = require("../DAOs/users/userMongo.dao")
 const { comparePassword } = require("../utils/bcrypt")
-const { generateToken } = require("../utils/jwt.util")
+const { generateToken, authToken } = require("../utils/jwt.util")
+// const roles = require("../middlewares/roles.middleware")
 
 const UsersMongo = new UsersMongoDao()
 const router = Router()
 
 //DEFINIDAS ANTES DE LAS RUTAS QUE DEVUELVEN DATOS DE USUARIO
-
 router.get("/github",
     passport.authenticate("github", { scope: ["user: email"] }),
     (req, res) => {}
@@ -23,7 +23,7 @@ router.get("/githubcallback",
 )
 
 router.post("/signUp",
-    passport.authenticate("register", { failureRedirect: "/failSignUp"}), 
+    passport.authenticate("signUp", { failureRedirect: "/failSignUp"}), 
     async (req, res) =>{
         try { 
             res.status(201).json({ status: "success", payload: req.user })
@@ -37,7 +37,7 @@ router.get("/failSignUp", (req, res) => {
     res.json({ status: "error", error: "Failed SignUp"})
 })
 
-router.post("/login", 
+router.post("/login",  
     async (req, res) => {
         try {
             const { email, password } = req.body
@@ -59,8 +59,7 @@ router.post("/login",
 
             const token = generateToken(user._id)
 
-            res
-                .cookie("authCookie", token, { maxAge: 30000, httpOnly: true })
+            res.cookie("authCookie", token, { maxAge: 30000, httpOnly: true })
                 .json({ status:"success", payload:"New session initilized", token})
         } catch (error) {
             console.log(error)
@@ -74,14 +73,17 @@ router.get("/failLogin", (req, res) => {
 })
 
 
-router.get("/", async (req, res) =>{
-    try {  
-        const users = await UsersMongo.findAll()
-        res.json({ message: users })
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({ status: "error", error: "Internal Server Error" })
-    } 
+router.get("/", 
+    // authToken,
+    // roles("user"),
+    async (req, res) =>{
+        try {  
+            const users = await UsersMongo.findAll()
+            res.json({ message: users })
+        } catch (error) {
+            console.log(error)
+            res.status(500).json({ status: "error", error: "Internal Server Error" })
+        } 
 }) 
    
 router.get("/:uid", async (req, res) =>{

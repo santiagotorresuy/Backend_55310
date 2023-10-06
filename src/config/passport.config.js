@@ -1,23 +1,24 @@
 const passport = require("passport")
 const local = require("passport-local")
-const GithubStrategy = require("passport-github2")
-const jwt = require("passport-jwt")
+const GithubStrategy = require("passport-github2") //ESTRATEGIA DE LOGIN CON GITHUB
+const jwt = require("passport-jwt") //JSON WEB TOKEN
 
 const UsersMongoDao = require("../DAOs/users/userMongo.dao.js")
-const { comparePassword, getHashedPassword } = require("../utils/bcrypt")
-const { github_passport, jwtConfig } = require("../config/index.config");
-const cookieExtractor = require("../utils/cookie-extractor.utils.js")
+const { comparePassword, getHashedPassword } = require("../utils/bcrypt") //HASHEO DE PASSWORD
+const { github_passport, jwtConfig } = require("../config/index.config") //DOTENV CONFIG (PARA MANEJOS DE DATOS SENSIBLES)
+const cookieExtractor = require("../utils/cookie-extractor.utils.js") //CONFIG DE COOKIE EXTRACTOR PARA CONFIGURAR LA COOKIE QUE SE V A AUTILIZAR
 
+const LocalStrategy = local.Strategy //STRATEGY PARA CONFIGURACION DE PASSPORT
+const JWTStrategy = jwt.Strategy //STRATEGY PARA CONFIGURACION DE JSON WEB TOKEN
+const ExtractJwt = jwt.ExtractJwt //STRATEGY PARA CONFIGURACION DE JSON WEB TOKEN
 
-
-const LocalStrategy = local.Strategy
-const JWTStrategy = jwt.Strategy
-const ExtractJwt = jwt.ExtractJwt
-const UsersMongo = new UsersMongoDao()
+const UsersMongo = new UsersMongoDao() //INSTANCIA DE LA CLASE PARA METODOS DE MONGO PARA USUARIOS
 
 const initializedPassport = () => {
+
+    //LOGIN
     passport.use(
-        "register",
+        "signUp",
         new LocalStrategy(
             { passReqToCallback: true, usernameField: "email" },
 
@@ -28,7 +29,7 @@ const initializedPassport = () => {
                     const user = await UsersMongo.findOne("email", username);
 
                     if(user){
-                        console.log("User already exists")
+                        console.log("User already exists") 
                         return done(null, false)
                     }
 
@@ -43,7 +44,7 @@ const initializedPassport = () => {
                     const newUser = await UsersMongo.insertOne(userInfo)
                     console.log(newUser)
                 
-                    res.status(201).json({ status: "success", payload: newUser })
+                    done(null, newUser)
                 } catch (error) {
                     done(`Error creating user: ${error}`)
                 }
@@ -61,7 +62,7 @@ const initializedPassport = () => {
 
                     if(!user){
                         console.log("User doesn't exist")
-                        return done(null, false)
+                        return done(null, false, {message: "No user found"})
                     }
 
                     if(!comparePassword(password, user.password)){
@@ -94,7 +95,7 @@ const initializedPassport = () => {
                         name: profile._json.name,
                         lastName: "",
                         email: profile._json.email,
-                        password: "",
+                        password: "", 
                     }
 
                     const newUser = await UsersMongo.insertOne(userData)

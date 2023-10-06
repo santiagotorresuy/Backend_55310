@@ -1,13 +1,11 @@
 const express = require("express");
 const handlebars = require("express-handlebars");
-
+const mongoConnect = require("./db")    
 const cookieParser = require("cookie-parser")
 
-
-const mongoConnect = require("./db")    
 const router = require("./routes/index");
-const initializedPassport = require("./config/passport.config");
 const passport = require("passport");
+const initializedPassport = require("./config/passport.config");
 
 const app = express()
 
