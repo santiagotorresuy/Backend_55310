@@ -1,10 +1,10 @@
-const homeController = require("../home/controller.home.js")
-const usersController = require("../users/controller.users.dao.js")
+const homeController = require("../controllers/home/controller.home.js")
+const usersController = require("../controllers/users/controller.users.dao.js")
 const templateController = require("../templates/controller.templates.js")
-const productController = require("../products/controller.product.dao.js")
-const createProductController = require("../createProduct/controller.create.product.js")
-const cartController = require("../cart/controller.cart.dao.js")
-const chatController = require("../chat/controller.chat.js")
+const productController = require("../controllers/products/controller.product.dao.js")
+const createProductController = require("../controllers/createProduct/controller.create.product.js")
+const cartController = require("../controllers/cart/controller.cart.dao.js")
+const chatController = require("../controllers/chat/controller.chat.js")
 
 
 const router = app => {

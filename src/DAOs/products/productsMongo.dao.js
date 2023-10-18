@@ -1,10 +1,9 @@
     const Products = require("../models/products.js")
     
     class ProductsMongoDao {
-
         async find(limit, page, sort) {
             
-            const query = {
+            const query = { 
                 status: true,
             }
 

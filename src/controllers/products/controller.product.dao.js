@@ -1,8 +1,8 @@
 const { Router } = require("express")
 const router = Router() 
 
-const ProductsMongoDao = require("../DAOs/products/productsMongo.dao")
-const ProductsFsDao = require("../DAOs/products/productsFs.dao")
+const ProductsMongoDao = require("../../DAOs/products/productsMongo.dao")
+const ProductsFsDao = require("../../DAOs/products/productsFs.dao")
 
 const ProductsMongo = new ProductsMongoDao()
 const ProductsFs = new ProductsFsDao()

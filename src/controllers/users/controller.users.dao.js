@@ -1,8 +1,8 @@
 const { Router } = require("express")
 const passport = require("passport")
-const UsersMongoDao = require("../DAOs/users/userMongo.dao")
-const { comparePassword } = require("../utils/bcrypt")
-const { generateToken, authToken } = require("../utils/jwt.util")
+const UsersMongoDao = require("../../DAOs/users/userMongo.dao")
+const { comparePassword } = require("../../utils/bcrypt")
+const { generateToken, authToken } = require("../../utils/jwt.util")
 // const roles = require("../middlewares/roles.middleware")
 
 const UsersMongo = new UsersMongoDao()
