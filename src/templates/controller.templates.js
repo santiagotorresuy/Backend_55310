@@ -1,6 +1,6 @@
 const { Router } = require("express");
 const { authToken } = require("../utils/jwt.util");
-const UsersMongoDao = require("../DAOs/users/userMongo.dao");
+const UsersMongoDao = require("../DAOs/mongo/users-mongo.dao");
 const passportCall = require("../utils/passport-call.util");
 
 const router = Router();

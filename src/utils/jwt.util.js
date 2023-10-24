@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken")
 const { jwtConfig } = require("../config/index.config");
-const UsersMongoDao = require("../DAOs/users/userMongo.dao");
+const UsersMongoDao = require("../DAOs/mongo/users-mongo.dao");
 
 const secretKey =  jwtConfig.secret
 const UsersMongo = new UsersMongoDao()

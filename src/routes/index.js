@@ -1,4 +1,3 @@
-const homeController = require("../controllers/home/controller.home.js")
 const usersController = require("../controllers/users/controller.users.dao.js")
 const templateController = require("../templates/controller.templates.js")
 const productController = require("../controllers/products/controller.product.dao.js")
@@ -8,7 +7,6 @@ const chatController = require("../controllers/chat/controller.chat.js")
 
 
 const router = app => {
-    app.use("/api/home", homeController)
     app.use("/api/users", usersController)
     app.use("/api/templates", templateController)
     app.use("/api/products", productController)

@@ -1,12 +1,27 @@
 {{#if status}}
+    <header class="header">
+        <div class="header__title">
+            <img src="/img/bonsai-logo.png" alt="" class="header__title__img">
+            <h1 class="header__title__h1">Bonsai</h1>
+        </div>
+        <form class="d-flex header__form" role="search">
+            <input class="form-control me-2 header__form__navbar" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
+        <div class="header__log">
+            <img width="32" height="32" src="https://img.icons8.com/retro/32/guest-male.png" alt="guest-male"/>
+            <img width="32" height="32" src="https://img.icons8.com/retro/32/shopping-cart-loaded.png" alt="shopping-cart-loaded"/>
+        </div>
+    </header>
+    <span class="category__filter">
+        <div class="category__filter__indoor" id="indoor">Indoor</div>
+        <div class="category__filter__outdoor" id="outdoor">Outdoor</div>
+    </span>
     <main class="main">
-        <div class="list_container">
+        <div class="list_container" >
             {{#each product}}
                 <div class="product_container">
-                    {{!-- <p>{{this.category}}</p> --}}
-
                     <img class="product_container_img" src="{{this.thumbnail}}" alt="img">
-                    
                     <h1 class="product_title">{{this.title}}</h1>
                     <p class="product_price">USD {{this.price}}</p>
                 </div>
@@ -15,10 +30,11 @@
     </main>
     <div class="pagination">
         <div class="pagination_handlers">
-            <button class="handle_prev">Prev</button>
-            <button class="handle_next">Next</button>
+            <button class="btn btn-primary handle_prev">Prev</button>
+            <button class="btn btn-primary handle_next">Next</button>
         </div>
     </div>
 {{/if}}
  
 <script src="/socket.io/socket.io.js"></script>
+<script src="/js/products.js"></script>

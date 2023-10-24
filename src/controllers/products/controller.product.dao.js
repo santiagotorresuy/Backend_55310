@@ -1,8 +1,8 @@
 const { Router } = require("express")
 const router = Router() 
 
-const ProductsMongoDao = require("../../DAOs/products/productsMongo.dao")
-const ProductsFsDao = require("../../DAOs/products/productsFs.dao")
+const ProductsMongoDao = require("../../DAOs/mongo/products-mongo.dao")
+const ProductsFsDao = require("../../DAOs/fs/products-fs.dao")
 
 const ProductsMongo = new ProductsMongoDao()
 const ProductsFs = new ProductsFsDao()
@@ -15,7 +15,7 @@ router.get("/", async (req, res) =>{
         const { limit , page , sort, category } = req.query
 
         //TRAIGO DE MONGO, HAGO POST CON FS 
-        const allProducts = await ProductsMongo.find(limit, page, sort)
+        const allProducts = await ProductsMongo.findAll(limit, page, sort)
         const products = allProducts.filter(prod => prod.category === category)
 
         await ProductsFs.post(category ? products : allProducts, productsFilePath)
@@ -28,9 +28,9 @@ router.get("/", async (req, res) =>{
             status,
             product: prods,
         })    
-
+ 
         // res.json( { message: allProducts })
-    } catch (error) {
+    } catch (error) { 
         res.json({ status: error, message: error});
     }
 });
@@ -62,6 +62,8 @@ router.get("/:pid", async (req, res) => {
         res.json({ status: error, message: error});
     }
 })    
+
+
 
 router.post("/", async (req, res) => {  
     const { title, description, price, thumbnail, code, category, stock } = req.body;

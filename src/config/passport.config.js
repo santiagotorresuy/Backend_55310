@@ -1,22 +1,19 @@
 const passport = require("passport")
 const local = require("passport-local")
-const GithubStrategy = require("passport-github2") //ESTRATEGIA DE LOGIN CON GITHUB
-const jwt = require("passport-jwt") //JSON WEB TOKEN
+const GithubStrategy = require("passport-github2") 
+const jwt = require("passport-jwt") 
+const usersService = require("../services/users-service")
+const { comparePassword, getHashedPassword } = require("../utils/bcrypt") 
+const { github_passport, jwtConfig } = require("../config/index.config") 
+const cookieExtractor = require("../utils/cookie-extractor.utils.js") 
+// const UserDTO = require("../DTOs/users.dto")
 
-const UsersMongoDao = require("../DAOs/users/userMongo.dao.js")
-const { comparePassword, getHashedPassword } = require("../utils/bcrypt") //HASHEO DE PASSWORD
-const { github_passport, jwtConfig } = require("../config/index.config") //DOTENV CONFIG (PARA MANEJOS DE DATOS SENSIBLES)
-const cookieExtractor = require("../utils/cookie-extractor.utils.js") //CONFIG DE COOKIE EXTRACTOR PARA CONFIGURAR LA COOKIE QUE SE V A AUTILIZAR
-
-const LocalStrategy = local.Strategy //STRATEGY PARA CONFIGURACION DE PASSPORT
-const JWTStrategy = jwt.Strategy //STRATEGY PARA CONFIGURACION DE JSON WEB TOKEN
-const ExtractJwt = jwt.ExtractJwt //STRATEGY PARA CONFIGURACION DE JSON WEB TOKEN
-
-const UsersMongo = new UsersMongoDao() //INSTANCIA DE LA CLASE PARA METODOS DE MONGO PARA USUARIOS
+const LocalStrategy = local.Strategy 
+const JWTStrategy = jwt.Strategy 
+const ExtractJwt = jwt.ExtractJwt 
 
 const initializedPassport = () => {
 
-    //LOGIN
     passport.use(
         "signUp",
         new LocalStrategy(
@@ -26,13 +23,13 @@ const initializedPassport = () => {
                 const { name, lastName, age, email } = req.body
 
                 try {
-                    const user = await UsersMongo.findOne("email", username);
+                    const user = await usersService.findOne("email", username);
 
                     if(user){
                         console.log("User already exists") 
                         return done(null, false)
                     }
-
+                    
                     const userInfo = {
                         name,  
                         lastName,
@@ -41,9 +38,7 @@ const initializedPassport = () => {
                         password: getHashedPassword(password),
                     }
                 
-                    const newUser = await UsersMongo.insertOne(userInfo)
-                    console.log(newUser)
-                
+                    const newUser = await usersService.insertOne(userInfo)
                     done(null, newUser)
                 } catch (error) {
                     done(`Error creating user: ${error}`)
@@ -58,7 +53,7 @@ const initializedPassport = () => {
             { usernameField: "email" },
             async (username, password, done) => {
                 try {
-                    const user = await UsersMongo.findOne("email", username)
+                    const user = await usersService.findOne("email", username)
 
                     if(!user){
                         console.log("User doesn't exist")
@@ -88,7 +83,8 @@ const initializedPassport = () => {
             try {
                 console.log(profile)
 
-                const user = await UsersMongo.findOne("email", profile._json.email)
+                const user = await usersService.findOne("email", profile._json.email)
+
 
                 if(!user) {
                     const userData = {
@@ -98,7 +94,8 @@ const initializedPassport = () => {
                         password: "", 
                     }
 
-                    const newUser = await UsersMongo.insertOne(userData)
+                    const newUser = await usersService.insertOne(userData)
+
                     return done(null, newUser)
                 }
 
@@ -124,7 +121,8 @@ const initializedPassport = () => {
     })
 
     passport.deserializeUser(async (id, done) => {
-        const user = await UsersMongo.findOne("_id", id)
+        const user = await usersService.findOne("_id", id)
+
         done(null, user)
     })
 }

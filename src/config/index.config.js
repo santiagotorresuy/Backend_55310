@@ -1,6 +1,7 @@
 require("dotenv").config()
 
 module.exports= {
+    persistence: process.env.NODE_ENV,
     port: process.env.PORT || 3000,
     db: {
         user: process.env.DB_USER,

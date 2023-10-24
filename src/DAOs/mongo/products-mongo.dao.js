@@ -1,7 +1,7 @@
     const Products = require("../models/products.js")
     
     class ProductsMongoDao {
-        async find(limit, page, sort) {
+        async findAll(limit, page, sort, category) {
             
             const query = { 
                 status: true,
@@ -10,6 +10,7 @@
             const options = {  
                 page: page || 1,
                 limit: limit || 9,
+                category: category,
                 sort: { price: sort === 'asc' ? -1 : 1 },
                 __v: 0,
             };
